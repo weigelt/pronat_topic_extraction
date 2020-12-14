@@ -73,6 +73,11 @@
         <dependency>
             <groupId>org.kohsuke.metainf-services</groupId>
             <artifactId>metainf-services</artifactId>
+    	</dependency>
+    	<dependency>
+        	<groupId>edu.kit.ipd.parse</groupId>
+            <artifactId>topic_extraction</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <properties>
