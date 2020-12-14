@@ -76,7 +76,7 @@
     	</dependency>
     	<dependency>
         	<groupId>edu.kit.ipd.parse</groupId>
-            <artifactId>topic_extraction</artifactId>
+            <artifactId>topic_extraction_common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
