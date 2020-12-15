@@ -1,4 +1,4 @@
-package edu.kit.ipd.parse.topicExtraction;
+package edu.kit.ipd.parse.topic_extraction;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -14,19 +14,19 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.kit.ipd.parse.topicExtraction.Topic;
-import edu.kit.ipd.parse.topicExtraction.TopicExtraction;
+import edu.kit.ipd.parse.topic_extraction_common.Topic;
+import edu.kit.ipd.parse.topic_extraction_common.TopicExtractionCommon;
 
 public class SimpleTopicExtractionTest {
 	private static final Logger	logger	= LoggerFactory.getLogger(SimpleTopicExtractionTest.class);
-	static TopicExtraction		topicExtraction;
+	static TopicExtractionCommon		topicExtraction;
 
 	private static final boolean	fileLog	= true;
 	private static final String		logFile	= SimpleTopicExtractionTest.class.getResource("/logfile.txt").getFile();	// TODO
 
 	@BeforeClass
 	public static void beforeClass() {
-		topicExtraction = new TopicExtraction();
+		topicExtraction = new TopicExtractionCommon();
 		topicExtraction.init();
 		// topicExtraction.setTopicSelectionMethod(TopicSelectionMethod.MaxConnectivity);
 

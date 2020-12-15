@@ -1,4 +1,4 @@
-package edu.kit.ipd.parse.topicExtraction;
+package edu.kit.ipd.parse.topic_extraction;
 
 import java.util.HashMap;
 
@@ -15,8 +15,9 @@ import edu.kit.ipd.parse.luna.pipeline.PipelineStageException;
 import edu.kit.ipd.parse.luna.tools.StringToHypothesis;
 import edu.kit.ipd.parse.ner.NERTagger;
 import edu.kit.ipd.parse.shallownlp.ShallowNLP;
-import edu.kit.ipd.parse.topicExtraction.util.TestHelper;
-import edu.kit.ipd.parse.topicExtraction.util.Text;
+import edu.kit.ipd.parse.topic_extraction.util.TestHelper;
+import edu.kit.ipd.parse.topic_extraction.util.Text;
+import edu.kit.ipd.parse.topic_extraction_common.TopicExtractionCommon;
 import edu.kit.ipd.parse.wikiWSD.WordSenseDisambiguation;
 
 /**
@@ -26,7 +27,7 @@ import edu.kit.ipd.parse.wikiWSD.WordSenseDisambiguation;
 public class TopicExtractionTest {
 	private static final Logger logger = LoggerFactory.getLogger(TopicExtractionTest.class);
 
-	private static TopicExtraction				topicExtraction;
+	private static TopicExtractionCommon				topicExtraction;
 	private static HashMap<String, Text> texts;
 	private PrePipelineData						ppd;
 	private static WordSenseDisambiguation		wsd;
@@ -45,7 +46,7 @@ public class TopicExtractionTest {
 		wsd = new WordSenseDisambiguation();
 		wsd.init();
 
-		topicExtraction = new TopicExtraction();
+		topicExtraction = new TopicExtractionCommon();
 		topicExtraction.init();
 
 		texts = TestHelper.texts;

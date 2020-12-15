@@ -1,4 +1,4 @@
-package edu.kit.ipd.parse.topicExtraction.util;
+package edu.kit.ipd.parse.topic_extraction.util;
 
 import java.io.IOException;
 import java.util.HashMap;

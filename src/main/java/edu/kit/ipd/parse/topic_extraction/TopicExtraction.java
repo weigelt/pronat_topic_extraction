@@ -1,4 +1,4 @@
-package edu.kit.ipd.parse.topicExtraction;
+package edu.kit.ipd.parse.topic_extraction;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -29,12 +29,15 @@ import edu.kit.ipd.parse.luna.graph.IGraph;
 import edu.kit.ipd.parse.luna.graph.INode;
 import edu.kit.ipd.parse.luna.graph.INodeType;
 import edu.kit.ipd.parse.luna.tools.ConfigManager;
-import edu.kit.ipd.parse.ner.NERTagger;
-import edu.kit.ipd.parse.topicExtraction.graph.TopicGraph;
-import edu.kit.ipd.parse.topicExtraction.graph.WikiVertex;
-import edu.kit.ipd.parse.topicExtraction.ontology.DBPediaConnector;
-import edu.kit.ipd.parse.topicExtraction.ontology.OfflineDBPediaConnector;
-import edu.kit.ipd.parse.topicExtraction.ontology.ResourceConnector;
+import edu.kit.ipd.parse.topic_extraction_common.Topic;
+import edu.kit.ipd.parse.topic_extraction_common.TopicExtractionCommon;
+import edu.kit.ipd.parse.topic_extraction_common.TopicSelectionMethod;
+import edu.kit.ipd.parse.topic_extraction_common.VertexScoreProcessor;
+import edu.kit.ipd.parse.topic_extraction_common.graph.TopicGraph;
+import edu.kit.ipd.parse.topic_extraction_common.graph.WikiVertex;
+import edu.kit.ipd.parse.topic_extraction_common.ontology.DBPediaConnector;
+import edu.kit.ipd.parse.topic_extraction_common.ontology.OfflineDBPediaConnector;
+import edu.kit.ipd.parse.topic_extraction_common.ontology.ResourceConnector;
 
 /**
  * @author Jan Keim
@@ -46,17 +49,21 @@ public class TopicExtraction extends AbstractAgent {
 	private static final String ID = "TopicExtraction";
 	private static final String TOKEN_NODE_TYPE = "token";
 	private static final String POS_ATTRIBUTE = "pos";
-	private static final String NER_ATTRIBUTE = NERTagger.NER_ATTRIBUTE_NAME;
+	private static final String NER_ATTRIBUTE = "ner";
 	private static final String WSD_ATTRIBUTE = "wsd";
 	public static final String TOPIC_ATTRIBUTE = "topic";
-	public static final String	TOPICS_NODE_TYPE	= "topics";
+	public static final String TOPICS_NODE_TYPE = "topics";
 
-	private int						numTopics				= -1;
-	private int						maxTopics				= 8;
-	private TopicSelectionMethod	topicSelectionMethod	= TopicSelectionMethod.CombinedConnectivity;
+	private int numTopics = -1;
+	private int maxTopics = 8;
+	private TopicSelectionMethod topicSelectionMethod = TopicSelectionMethod.CombinedConnectivity;
 
-	/** Timeouts are handed that 1/5th of the time is allowed for the first hop */
-	private int	timeoutFirstHop	= 60 * 1;	// 1 Minute
+	private TopicExtractionCommon topicExtractionCommon; //TODO
+
+	/**
+	 * Timeouts are handed that 1/5th of the time is allowed for the first hop
+	 */
+	private int timeoutFirstHop = 60 * 1; // 1 Minute
 	private int timeoutSecondHop = 60 * 4; // 4 Minutes
 
 	/** Cache to speed up creating sense graphs */
@@ -101,8 +108,9 @@ public class TopicExtraction extends AbstractAgent {
 	}
 
 	/**
-	 * Gets the timeout (for creating the sense graphs). Note, that for the first hop the maximum allowed time will be
-	 * one quarter of the overall timeout
+	 * Gets the timeout (for creating the sense graphs). Note, that for the
+	 * first hop the maximum allowed time will be one quarter of the overall
+	 * timeout
 	 *
 	 * @return the timeout.
 	 */
@@ -111,8 +119,9 @@ public class TopicExtraction extends AbstractAgent {
 	}
 
 	/**
-	 * Sets the timeout (for creating the sense graphs). Note, that for the first hop the maximum allowed time will be
-	 * one quarter of the overall timeout
+	 * Sets the timeout (for creating the sense graphs). Note, that for the
+	 * first hop the maximum allowed time will be one quarter of the overall
+	 * timeout
 	 *
 	 * @param timeout
 	 *            the timeout to set
@@ -123,8 +132,8 @@ public class TopicExtraction extends AbstractAgent {
 	}
 
 	/**
-	 * Sets the number of topics allowed. If a negative number is set, the algorithm will decide a proper ammount of
-	 * topics
+	 * Sets the number of topics allowed. If a negative number is set, the
+	 * algorithm will decide a proper ammount of topics
 	 *
 	 * @param n
 	 *            number of topics
@@ -207,8 +216,8 @@ public class TopicExtraction extends AbstractAgent {
 	}
 
 	/**
-	 * Extracts topics out of the provided {@link IGraph}. Throws an {@link IllegalArgumentException} if no topics are
-	 * annotated
+	 * Extracts topics out of the provided {@link IGraph}. Throws an
+	 * {@link IllegalArgumentException} if no topics are annotated
 	 *
 	 * @param inputGraph
 	 *            Graph the topics shall be extracted from
@@ -254,7 +263,8 @@ public class TopicExtraction extends AbstractAgent {
 	}
 
 	/**
-	 * Creates a list of {@link Topic}s for the input senses. The methods determines the amount of topics itself.
+	 * Creates a list of {@link Topic}s for the input senses. The methods
+	 * determines the amount of topics itself.
 	 *
 	 * @param wordSenses
 	 *            Collection of input senses
@@ -270,7 +280,8 @@ public class TopicExtraction extends AbstractAgent {
 	 * @param wordSenses
 	 *            Collection of input word senses
 	 * @param amountOfTopics
-	 *            Amount of topics you want. If <= 0, the method selects the amount itself.
+	 *            Amount of topics you want. If <= 0, the method selects the
+	 *            amount itself.
 	 * @return List of {@link Topic}s
 	 */
 	public synchronized List<Topic> getTopicsForSenses(Collection<String> wordSenses, int amountOfTopics) {
@@ -301,8 +312,7 @@ public class TopicExtraction extends AbstractAgent {
 		}
 		final TopicGraph topicGraph = TopicGraph.createTopicGraph(senseGraphs);
 		if (logger.isDebugEnabled()) {
-			logger.debug("Graph has " + topicGraph.getVerticesSize() + " nodes and " + topicGraph.getEdgesSize()
-			+ " vertices");
+			logger.debug("Graph has " + topicGraph.getVerticesSize() + " nodes and " + topicGraph.getEdgesSize() + " vertices");
 		}
 		return topicGraph;
 	}
@@ -313,7 +323,8 @@ public class TopicExtraction extends AbstractAgent {
 	 * @param topicGraph
 	 *            input topic Graph
 	 * @param amountOfTopics
-	 *            Amount of topics you want. If <= 0, the methods selects the amount itself.
+	 *            Amount of topics you want. If <= 0, the methods selects the
+	 *            amount itself.
 	 * @return List of {@link Topic}s
 	 */
 	public synchronized List<Topic> getTopicsForTopicGraph(TopicGraph topicGraph, int amountOfTopics) {
@@ -340,8 +351,7 @@ public class TopicExtraction extends AbstractAgent {
 			topicList.add(topic);
 		}
 
-		final Comparator<Topic> byConnectivity = (t1, t2) -> Integer.compare(t2.getRelatedSenses().size(),
-				t1.getRelatedSenses().size());
+		final Comparator<Topic> byConnectivity = (t1, t2) -> Integer.compare(t2.getRelatedSenses().size(), t1.getRelatedSenses().size());
 		final Comparator<Topic> byScore = (t1, t2) -> Double.compare(t2.getScore(), t1.getScore());
 
 		Collections.sort(topicList, byConnectivity.thenComparing(byScore));
@@ -421,8 +431,8 @@ public class TopicExtraction extends AbstractAgent {
 		// all went fine, save the graph in the cache and return
 		this.graphCache.put(wordFromResource, retGraph);
 		if (logger.isDebugEnabled()) {
-			logger.debug("SenseGraph for " + word + " has " + retGraph.getVerticesSize() + " nodes and "
-					+ retGraph.getEdgesSize() + " vertices");
+			logger.debug("SenseGraph for " + word + " has " + retGraph.getVerticesSize() + " nodes and " + retGraph.getEdgesSize()
+					+ " vertices");
 		}
 		return retGraph;
 	}
@@ -431,8 +441,7 @@ public class TopicExtraction extends AbstractAgent {
 		logger.warn("Stopped creation of the SenseGraph for '" + word + "' early due to a timeout");
 		this.graphCache.put(wordFromResource, tg);
 		if (logger.isDebugEnabled()) {
-			logger.debug("SenseGraph for " + word + " has " + tg.getVerticesSize() + " nodes and " + tg.getEdgesSize()
-			+ " vertices");
+			logger.debug("SenseGraph for " + word + " has " + tg.getVerticesSize() + " nodes and " + tg.getEdgesSize() + " vertices");
 		}
 		return tg;
 	}
@@ -442,10 +451,7 @@ public class TopicExtraction extends AbstractAgent {
 	}
 
 	private Map<WikiVertex, Double> getSortedCentralityScores(TopicGraph tGraph) {
-		return tGraph.getCentralityScores()
-				.entrySet()
-				.stream()
-				.sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
+		return tGraph.getCentralityScores().entrySet().stream().sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
 				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 	}
 
