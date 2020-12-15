@@ -17,7 +17,6 @@ import edu.kit.ipd.parse.ner.NERTagger;
 import edu.kit.ipd.parse.shallownlp.ShallowNLP;
 import edu.kit.ipd.parse.topic_extraction.util.TestHelper;
 import edu.kit.ipd.parse.topic_extraction.util.Text;
-import edu.kit.ipd.parse.topic_extraction_common.TopicExtractionCommon;
 import edu.kit.ipd.parse.wikiWSD.WordSenseDisambiguation;
 
 /**
@@ -27,13 +26,13 @@ import edu.kit.ipd.parse.wikiWSD.WordSenseDisambiguation;
 public class TopicExtractionTest {
 	private static final Logger logger = LoggerFactory.getLogger(TopicExtractionTest.class);
 
-	private static TopicExtractionCommon				topicExtraction;
+	private static TopicExtraction topicExtraction;
 	private static HashMap<String, Text> texts;
-	private PrePipelineData						ppd;
-	private static WordSenseDisambiguation		wsd;
-	private static ShallowNLP					snlp;
-	private static GraphBuilder					graphBuilder;
-	private static NERTagger					ner;
+	private PrePipelineData ppd;
+	private static WordSenseDisambiguation wsd;
+	private static ShallowNLP snlp;
+	private static GraphBuilder graphBuilder;
+	private static NERTagger ner;
 
 	@BeforeClass
 	public static void beforeClass() {
@@ -46,7 +45,7 @@ public class TopicExtractionTest {
 		wsd = new WordSenseDisambiguation();
 		wsd.init();
 
-		topicExtraction = new TopicExtractionCommon();
+		topicExtraction = new TopicExtraction();
 		topicExtraction.init();
 
 		texts = TestHelper.texts;
@@ -71,6 +70,7 @@ public class TopicExtractionTest {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void testOneText(String id) {
 		logger.debug(id);
 		this.ppd = new PrePipelineData();
