@@ -120,7 +120,7 @@ public class TopicExtraction extends AbstractAgent {
 		}
 		final List<Topic> topics = this.topicExtractionCore.getTopicsForSenses(nodeToWSD.values());
 
-		TopicExtractionCore.addTopicsToInputGraph(topics, this.graph);
+		TopicExtractionCore.setTopicsToInputGraph(topics, this.graph);
 
 		if (TopicExtraction.logger.isDebugEnabled()) {
 			final List<Topic> retrievedTopics = TopicExtractionCore.getTopicsFromIGraph(this.graph);
