@@ -43,7 +43,6 @@ public class TopicExtraction extends AbstractAgent {
 
 	private TopicExtractionCore topicExtractionCore;
 
-	// TODO
 	@Override
 	public void init() {
 		this.setId(TopicExtraction.ID);
@@ -57,7 +56,10 @@ public class TopicExtraction extends AbstractAgent {
 			if (url.isEmpty()) {
 				url = DBPediaConnector.DEFAULT_SERVICE_URL;
 			}
-			resourceConnector = !cache.isBlank() && cache.equalsIgnoreCase("y") ? new CachedResourceConnector(new DBPediaConnector(url)) : new DBPediaConnector(url);
+			resourceConnector = new DBPediaConnector(url);
+			if (!cache.isBlank() && cache.equalsIgnoreCase("y")) {
+				resourceConnector = new CachedResourceConnector(resourceConnector);
+			}
 		} else {
 			if (TopicExtraction.logger.isInfoEnabled()) {
 				TopicExtraction.logger.info("Using offline version for resource connection.");
