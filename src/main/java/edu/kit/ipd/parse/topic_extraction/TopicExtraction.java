@@ -19,8 +19,10 @@ import edu.kit.ipd.parse.luna.tools.ConfigManager;
 import edu.kit.ipd.parse.topic_extraction_common.Topic;
 import edu.kit.ipd.parse.topic_extraction_common.TopicExtractionCore;
 import edu.kit.ipd.parse.topic_extraction_common.TopicSelectionMethod;
+import edu.kit.ipd.parse.topic_extraction_common.ontology.CachedResourceConnector;
 import edu.kit.ipd.parse.topic_extraction_common.ontology.DBPediaConnector;
 import edu.kit.ipd.parse.topic_extraction_common.ontology.OfflineDBPediaConnector;
+import edu.kit.ipd.parse.topic_extraction_common.ontology.ResourceConnector;
 
 /**
  * @author Jan Keim
@@ -41,20 +43,21 @@ public class TopicExtraction extends AbstractAgent {
 
 	private TopicExtractionCore topicExtractionCore;
 
-	//TODO
+	// TODO
 	@Override
 	public void init() {
 		this.setId(TopicExtraction.ID);
 
 		final Properties props = ConfigManager.getConfiguration(this.getClass());
 		final String offline = props.getProperty("OFFLINE_USE");
-		DBPediaConnector resourceConnector;
+		final String cache = props.getProperty("USE_CACHE", "Y").trim();
+		ResourceConnector resourceConnector;
 		if ((offline == null) || offline.isEmpty() || offline.equals("N")) {
 			String url = props.getProperty("URL", DBPediaConnector.DEFAULT_SERVICE_URL);
 			if (url.isEmpty()) {
 				url = DBPediaConnector.DEFAULT_SERVICE_URL;
 			}
-			resourceConnector = new DBPediaConnector(url);
+			resourceConnector = !cache.isBlank() && cache.equalsIgnoreCase("y") ? new CachedResourceConnector(new DBPediaConnector(url)) : new DBPediaConnector(url);
 		} else {
 			if (TopicExtraction.logger.isInfoEnabled()) {
 				TopicExtraction.logger.info("Using offline version for resource connection.");
