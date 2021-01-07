@@ -45,9 +45,9 @@ public class TopicExtraction extends AbstractAgent {
 
 	@Override
 	public void init() {
-		this.setId(TopicExtraction.ID);
+		setId(TopicExtraction.ID);
 
-		final Properties props = ConfigManager.getConfiguration(this.getClass());
+		final Properties props = ConfigManager.getConfiguration(getClass());
 		final String offline = props.getProperty("OFFLINE_USE");
 		final String cache = props.getProperty("USE_CACHE", "Y").trim();
 		ResourceConnector resourceConnector;
@@ -81,25 +81,25 @@ public class TopicExtraction extends AbstractAgent {
 			TopicExtraction.logger.warn("Could not parse provided number for amount of topics. Use default instead.");
 		}
 
-		this.topicExtractionCore = new TopicExtractionCore(resourceConnector);
-		this.topicExtractionCore.setNumTopics(numTopics);
+		topicExtractionCore = new TopicExtractionCore(resourceConnector);
+		topicExtractionCore.setNumTopics(numTopics);
 	}
 
 	public void setTopicSelectionMethod(TopicSelectionMethod tsm) {
-		this.topicSelectionMethod = tsm;
+		topicSelectionMethod = tsm;
 	}
 
 	public TopicSelectionMethod getTopicSelectionMethod() {
-		return this.topicSelectionMethod;
+		return topicSelectionMethod;
 	}
 
 	private void prepareGraph() {
 		// add graph attribute
 		INodeType tokenType;
-		if (this.graph.hasNodeType(TopicExtraction.TOPICS_NODE_TYPE)) {
-			tokenType = this.graph.getNodeType(TopicExtraction.TOPICS_NODE_TYPE);
+		if (graph.hasNodeType(TopicExtraction.TOPICS_NODE_TYPE)) {
+			tokenType = graph.getNodeType(TopicExtraction.TOPICS_NODE_TYPE);
 		} else {
-			tokenType = this.graph.createNodeType(TopicExtraction.TOPICS_NODE_TYPE);
+			tokenType = graph.createNodeType(TopicExtraction.TOPICS_NODE_TYPE);
 		}
 		if (!tokenType.containsAttribute(TopicExtraction.TOPIC_ATTRIBUTE, "java.util.List")) {
 			tokenType.addAttributeToType("java.util.List", TopicExtraction.TOPIC_ATTRIBUTE);
@@ -108,13 +108,13 @@ public class TopicExtraction extends AbstractAgent {
 
 	@Override
 	protected synchronized void exec() {
-		this.prepareGraph();
-		final List<INode> nodes = this.getTokenNodesFromGraph();
+		prepareGraph();
+		final List<INode> nodes = getTokenNodesFromGraph();
 		final Map<INode, String> nodeToWSD = new HashMap<>();
 		for (final INode node : nodes) {
 			final String pos = node.getAttributeValue(TopicExtraction.POS_ATTRIBUTE).toString();
 			if (pos.startsWith("NN")) {
-				if (this.nodeIsNamedEntity(node)) {
+				if (nodeIsNamedEntity(node)) {
 					continue;
 				}
 				final String wsd = Objects.toString(node.getAttributeValue(TopicExtraction.WSD_ATTRIBUTE));
@@ -123,12 +123,12 @@ public class TopicExtraction extends AbstractAgent {
 				}
 			}
 		}
-		final List<Topic> topics = this.topicExtractionCore.getTopicsForSenses(nodeToWSD.values());
+		final List<Topic> topics = topicExtractionCore.getTopicsForSenses(nodeToWSD.values());
 
-		TopicExtractionCore.setTopicsToInputGraph(topics, this.graph);
+		TopicExtractionCore.setTopicsToInputGraph(topics, graph);
 
 		if (TopicExtraction.logger.isDebugEnabled()) {
-			final List<Topic> retrievedTopics = TopicExtractionCore.getTopicsFromIGraph(this.graph);
+			final List<Topic> retrievedTopics = TopicExtractionCore.getTopicsFromIGraph(graph);
 			TopicExtraction.logger.debug("Retrieved {} topics:", retrievedTopics.size());
 			for (final Topic t : retrievedTopics) {
 				if (logger.isDebugEnabled()) {
@@ -141,15 +141,15 @@ public class TopicExtraction extends AbstractAgent {
 
 	public void exec(PrePipelineData ppd) {
 		try {
-			this.graph = ppd.getGraph();
+			graph = ppd.getGraph();
 		} catch (final MissingDataException e) {
 			e.printStackTrace();
 		}
-		this.exec();
+		exec();
 	}
 
 	private List<INode> getTokenNodesFromGraph() {
-		return this.graph.getNodesOfType(this.graph.getNodeType(TOKEN_NODE_TYPE));
+		return graph.getNodesOfType(graph.getNodeType(TOKEN_NODE_TYPE));
 	}
 
 	private boolean nodeIsNamedEntity(INode node) {
