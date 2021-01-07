@@ -19,18 +19,13 @@
         </repository>
     </repositories>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<parse_bundle.directory>../parse_bundle</parse_bundle.directory>
-	</properties>
-
     <build>
-		<resources>
-			<resource>
-				<filtering>true</filtering>
-				<directory>src/main/resources</directory>
-			</resource>
-		</resources>
+        <resources>
+            <resource>
+                <filtering>true</filtering>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -85,67 +80,54 @@
         <dependency>
             <groupId>org.kohsuke.metainf-services</groupId>
             <artifactId>metainf-services</artifactId>
-    	</dependency>
-    	<dependency>
-        	<groupId>edu.kit.ipd.parse</groupId>
-            <artifactId>topic_extraction_common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jgrapht</groupId>
-			<artifactId>jgrapht-core</artifactId>
-			<version>1.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jgrapht</groupId>
-			<artifactId>jgrapht-ext</artifactId>
-			<version>1.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-math3</artifactId>
-			<version>3.6.1</version>
-		</dependency>
-		<dependency>
-			<groupId>edu.kit.ipd.parse</groupId>
-			<artifactId>tokenizing</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>edu.kit.ipd.parse</groupId>
-			<artifactId>ShallowNLP</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>edu.kit.ipd.parse</groupId>
-			<artifactId>graphBuilder</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>edu.kit.ipd.parse</groupId>
-			<artifactId>ner</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>edu.kit.ipd.parse</groupId>
-			<artifactId>topic_extraction_common</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-        	<groupId>edu.kit.ipd.parse</groupId>
-            <artifactId>wikiWSD</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jgrapht</groupId>
+            <artifactId>jgrapht-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jgrapht</groupId>
+            <artifactId>jgrapht-ext</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>edu.kit.ipd.parse</groupId>
+            <artifactId>ShallowNLP</artifactId>
             <scope>test</scope>
         </dependency>
-		<dependency>
-			<groupId>org.apache.jena</groupId>
-			<artifactId>apache-jena-libs</artifactId>
-			<version>3.2.0</version>
-			<type>pom</type>
-		</dependency>
+        <dependency>
+            <groupId>edu.kit.ipd.parse</groupId>
+            <artifactId>graphBuilder</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>edu.kit.ipd.parse</groupId>
+            <artifactId>ner</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>edu.kit.ipd.parse</groupId>
+            <artifactId>topic_extraction_common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>edu.kit.ipd.parse</groupId>
+            <artifactId>wikiWSD</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>apache-jena-libs</artifactId>
+            <type>pom</type>
+        </dependency>
     </dependencies>
+    <properties>
+        <parse_bundle.directory>../parse_bundle</parse_bundle.directory>
+    </properties>
 </project>
