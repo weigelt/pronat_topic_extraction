@@ -27,13 +27,13 @@
             </resource>
         </resources>
         <plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<argLine>-Xmx10g -Xms2G</argLine>
-				</configuration>
-			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>-Xmx10g -Xms2G</argLine>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -134,9 +134,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>edu.kit.ipd.parse</groupId>
+            <groupId>edgit u.kit.ipd.parse</groupId>
             <artifactId>wiki_wsd_models</artifactId>
-			<scope>test</scope>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.jena</groupId>
