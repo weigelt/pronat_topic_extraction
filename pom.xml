@@ -114,6 +114,11 @@
         </dependency>
         <dependency>
             <groupId>edu.kit.ipd.parse</groupId>
+            <artifactId>SRLabeler</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>edu.kit.ipd.parse</groupId>
             <artifactId>topic_extraction_common</artifactId>
         </dependency>
         <dependency>
