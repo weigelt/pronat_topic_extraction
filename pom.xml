@@ -134,7 +134,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>edgit u.kit.ipd.parse</groupId>
+            <groupId>edu.kit.ipd.parse</groupId>
             <artifactId>wiki_wsd_models</artifactId>
             <scope>test</scope>
         </dependency>
