@@ -16,6 +16,10 @@ public class Text {
 	private String text;
 	private List<String[]> annotations;
 
+	// For deserialize ..
+	Text() {
+	}
+
 	Text(String text, List<String[]> annotations) {
 		setText(text);
 		setRefs(annotations);
