@@ -1,4 +1,4 @@
-package edu.kit.ipd.parse.topic_extraction;
+package edu.kit.ipd.pronat.topic_extraction;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,21 +11,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.kit.ipd.parse.luna.agent.AbstractAgent;
-import edu.kit.ipd.parse.luna.data.MissingDataException;
-import edu.kit.ipd.parse.luna.data.PrePipelineData;
 import edu.kit.ipd.parse.luna.graph.INode;
 import edu.kit.ipd.parse.luna.graph.INodeType;
 import edu.kit.ipd.parse.luna.tools.ConfigManager;
-import edu.kit.ipd.parse.topic_extraction_common.Topic;
-import edu.kit.ipd.parse.topic_extraction_common.TopicExtractionCore;
-import edu.kit.ipd.parse.topic_extraction_common.TopicSelectionMethod;
-import edu.kit.ipd.parse.topic_extraction_common.ontology.CachedResourceConnector;
-import edu.kit.ipd.parse.topic_extraction_common.ontology.DBPediaConnector;
-import edu.kit.ipd.parse.topic_extraction_common.ontology.OfflineDBPediaConnector;
-import edu.kit.ipd.parse.topic_extraction_common.ontology.ResourceConnector;
+import edu.kit.ipd.pronat.topic_extraction_common.Topic;
+import edu.kit.ipd.pronat.topic_extraction_common.TopicExtractionCore;
+import edu.kit.ipd.pronat.topic_extraction_common.TopicSelectionMethod;
+import edu.kit.ipd.pronat.topic_extraction_common.ontology.CachedResourceConnector;
+import edu.kit.ipd.pronat.topic_extraction_common.ontology.DBPediaConnector;
+import edu.kit.ipd.pronat.topic_extraction_common.ontology.OfflineDBPediaConnector;
+import edu.kit.ipd.pronat.topic_extraction_common.ontology.ResourceConnector;
 
 /**
  * @author Jan Keim
+ * @author Sebastian Weigelt
  *
  */
 @MetaInfServices(AbstractAgent.class)
@@ -43,9 +42,12 @@ public class TopicExtraction extends AbstractAgent {
 
 	private TopicExtractionCore topicExtractionCore;
 
+	public TopicExtraction() {
+		setId(TopicExtraction.ID);
+	}
+
 	@Override
 	public void init() {
-		setId(TopicExtraction.ID);
 
 		final Properties props = ConfigManager.getConfiguration(getClass());
 		final String offline = props.getProperty("OFFLINE_USE");
@@ -137,15 +139,6 @@ public class TopicExtraction extends AbstractAgent {
 
 			}
 		}
-	}
-
-	public void exec(PrePipelineData ppd) {
-		try {
-			graph = ppd.getGraph();
-		} catch (final MissingDataException e) {
-			e.printStackTrace();
-		}
-		exec();
 	}
 
 	private List<INode> getTokenNodesFromGraph() {

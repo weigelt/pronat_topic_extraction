@@ -1,7 +1,7 @@
 /**
  *
  */
-package edu.kit.ipd.parse.topic_extraction.util;
+package edu.kit.ipd.pronat.topic_extraction.util;
 
 import java.util.List;
 
@@ -10,15 +10,12 @@ import java.util.List;
  * Hey
  *
  * @author Jan Keim
+ * @author Sebastian Weigelt
  *
  */
 public class Text {
 	private String text;
 	private List<String[]> annotations;
-
-	// For deserialize ..
-	Text() {
-	}
 
 	Text(String text, List<String[]> annotations) {
 		setText(text);
@@ -48,8 +45,8 @@ public class Text {
 	}
 
 	/**
-	 * @param refs
-	 *            the refs to set
+	 * @param annotations
+	 *            the annotations to set
 	 */
 	private void setRefs(List<String[]> annotations) {
 		this.annotations = annotations;

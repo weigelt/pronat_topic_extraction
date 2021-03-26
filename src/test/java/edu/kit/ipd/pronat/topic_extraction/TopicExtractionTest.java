@@ -1,26 +1,27 @@
-package edu.kit.ipd.parse.topic_extraction;
+package edu.kit.ipd.pronat.topic_extraction;
 
 import java.util.HashMap;
 
+import edu.kit.ipd.pronat.graph_builder.GraphBuilder;
+import edu.kit.ipd.pronat.ner.NERTagger;
+import edu.kit.ipd.pronat.prepipedatamodel.PrePipelineData;
+import edu.kit.ipd.pronat.prepipedatamodel.tools.StringToHypothesis;
+import edu.kit.ipd.pronat.shallow_nlp.ShallowNLP;
+import edu.kit.ipd.pronat.topic_extraction.util.TestHelper;
+import edu.kit.ipd.pronat.topic_extraction.util.Text;
+import edu.kit.ipd.pronat.wiki_wsd.WordSenseDisambiguation;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.kit.ipd.parse.graphBuilder.GraphBuilder;
 import edu.kit.ipd.parse.luna.data.MissingDataException;
-import edu.kit.ipd.parse.luna.data.PrePipelineData;
 import edu.kit.ipd.parse.luna.graph.IGraph;
 import edu.kit.ipd.parse.luna.pipeline.PipelineStageException;
-import edu.kit.ipd.parse.luna.tools.StringToHypothesis;
-import edu.kit.ipd.parse.ner.NERTagger;
-import edu.kit.ipd.parse.shallownlp.ShallowNLP;
-import edu.kit.ipd.parse.topic_extraction.util.TestHelper;
-import edu.kit.ipd.parse.topic_extraction.util.Text;
-import edu.kit.ipd.parse.wikiWSD.WordSenseDisambiguation;
 
 /**
  * @author Jan Keim
+ * @author Sebastian Weigelt
  *
  */
 public class TopicExtractionTest {
@@ -29,7 +30,7 @@ public class TopicExtractionTest {
 	private static TopicExtraction topicExtraction;
 	private static HashMap<String, Text> texts;
 	private PrePipelineData ppd;
-	private static WordSenseDisambiguation wsd;
+	private static MyWikiWSD wsd;
 	private static ShallowNLP snlp;
 	private static GraphBuilder graphBuilder;
 	private static NERTagger ner;
@@ -42,7 +43,7 @@ public class TopicExtractionTest {
 		snlp.init();
 		ner = new NERTagger();
 		ner.init();
-		wsd = new WordSenseDisambiguation();
+		wsd = new MyWikiWSD();
 		wsd.init();
 
 		topicExtraction = new TopicExtraction();
@@ -63,23 +64,23 @@ public class TopicExtractionTest {
 				graphBuilder.exec(ppd);
 			}
 			synchronized (wsd) {
-				wsd.exec(ppd);
+				wsd.setGraph(ppd.getGraph());
+				wsd.exec();
 			}
-		} catch (final PipelineStageException e) {
+		} catch (final PipelineStageException | MissingDataException e) {
 			e.printStackTrace();
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private void testOneText(String id) {
 		logger.debug(id);
-		this.ppd = new PrePipelineData();
+		ppd = new PrePipelineData();
 		final Text text = texts.get(id);
 		final String input = text.getText().replace("\n", " ");
-		this.ppd.setMainHypothesis(StringToHypothesis.stringToMainHypothesis(input));
-		this.executePrepipeline(this.ppd);
+		ppd.setMainHypothesis(StringToHypothesis.stringToMainHypothesis(input));
+		executePrepipeline(ppd);
 		try {
-			final IGraph graph = this.ppd.getGraph();
+			final IGraph graph = ppd.getGraph();
 			topicExtraction.setGraph(graph);
 			topicExtraction.exec();
 		} catch (final MissingDataException e) {
@@ -89,12 +90,19 @@ public class TopicExtractionTest {
 
 	@Test
 	public void testOneOne() {
-		this.testOneText("1.1");
+		testOneText("1.1");
 	}
 
 	@Test
 	public void testThreeTwo() {
-		this.testOneText("3.2");
+		testOneText("3.2");
 	}
 
+	static class MyWikiWSD extends WordSenseDisambiguation {
+
+		@Override
+		public void exec() {
+			super.exec();
+		}
+	}
 }
